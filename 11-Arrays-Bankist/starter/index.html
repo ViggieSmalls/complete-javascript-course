@@ -24,13 +24,15 @@
           type="text"
           placeholder="user"
           class="login__input login__input--user"
+          name="user"
         />
         <!-- In practice, use type="password" -->
         <input
-          type="text"
+          type="password"
           placeholder="PIN"
           maxlength="4"
           class="login__input login__input--pin"
+          name="password"
         />
         <button class="login__btn">&rarr;</button>
       </form>
@@ -50,18 +52,18 @@
 
       <!-- MOVEMENTS -->
       <div class="movements">
-        <div class="movements__row">
-          <div class="movements__type movements__type--deposit">2 deposit</div>
-          <div class="movements__date">3 days ago</div>
-          <div class="movements__value">4 000€</div>
-        </div>
-        <div class="movements__row">
-          <div class="movements__type movements__type--withdrawal">
-            1 withdrawal
-          </div>
-          <div class="movements__date">24/01/2037</div>
-          <div class="movements__value">-378€</div>
-        </div>
+<!--        <div class="movements__row">-->
+<!--          <div class="movements__type movements__type&#45;&#45;deposit">2 deposit</div>-->
+<!--          <div class="movements__date">3 days ago</div>-->
+<!--          <div class="movements__value">4 000€</div>-->
+<!--        </div>-->
+<!--        <div class="movements__row">-->
+<!--          <div class="movements__type movements__type&#45;&#45;withdrawal">-->
+<!--            1 withdrawal-->
+<!--          </div>-->
+<!--          <div class="movements__date">24/01/2037</div>-->
+<!--          <div class="movements__value">-378€</div>-->
+<!--        </div>-->
       </div>
 
       <!-- SUMMARY -->
@@ -79,8 +81,8 @@
       <div class="operation operation--transfer">
         <h2>Transfer money</h2>
         <form class="form form--transfer">
-          <input type="text" class="form__input form__input--to" />
-          <input type="number" class="form__input form__input--amount" />
+          <input type="text" class="form__input form__input--to" name="username" />
+          <input type="number" class="form__input form__input--amount" name="amount"/>
           <button class="form__btn form__btn--transfer">&rarr;</button>
           <label class="form__label">Transfer to</label>
           <label class="form__label">Amount</label>
@@ -91,7 +93,7 @@
       <div class="operation operation--loan">
         <h2>Request loan</h2>
         <form class="form form--loan">
-          <input type="number" class="form__input form__input--loan-amount" />
+          <input type="number" class="form__input form__input--loan-amount" name="amount"/>
           <button class="form__btn form__btn--loan">&rarr;</button>
           <label class="form__label form__label--loan">Amount</label>
         </form>
@@ -101,11 +103,12 @@
       <div class="operation operation--close">
         <h2>Close account</h2>
         <form class="form form--close">
-          <input type="text" class="form__input form__input--user" />
+          <input type="text" class="form__input form__input--user" name="user" />
           <input
             type="password"
             maxlength="6"
             class="form__input form__input--pin"
+            name="password"
           />
           <button class="form__btn form__btn--close">&rarr;</button>
           <label class="form__label">Confirm user</label>
