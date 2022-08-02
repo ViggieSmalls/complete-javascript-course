@@ -227,17 +227,23 @@ const App = (function () {
   }
 
   function resetLogoutInterval() {
+    if (!State.currentAccount) return
     clearInterval(State.logoutInterval)
     State.timeToLogout = 60 // seconds
     State.logoutInterval = setInterval(() => {
       if (State.timeToLogout <= 0) {
-        logoutCurrentAccount(currentAccount)
-        clearInterval(State.logoutInterval)
+        logout()
       } else {
         State.timeToLogout--
         displayTimeUntilLogout(State.timeToLogout)
       }
     }, 1000)
+  }
+
+  function logout() {
+    containerApp.style.opacity = '0'
+    State.currentAccount = null
+    currentAccount = null  // todo: remove after refactoring
   }
 
   function init() {
