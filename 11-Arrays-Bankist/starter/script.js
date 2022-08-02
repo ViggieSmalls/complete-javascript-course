@@ -107,11 +107,15 @@ function handleAccountCloseFormSubmit(evt) {
     }
 }
 
+function displayDateAsString(date) {
+    return String(date.getDate()).padStart(2, '0') + '/' + String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getFullYear())
+}
+
+/* updates the date displayed on the screen. updates every minute*/
 function updateDate() {
     const now = new Date()
-    console.log("updating date", now)
+    labelDate.textContent = displayDateAsString(now)
     setTimeout(updateDate, (60 - now.getSeconds()) * 1000)
-    labelDate.textContent = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + String(now.getFullYear())
 }
 
 function initApp() {
