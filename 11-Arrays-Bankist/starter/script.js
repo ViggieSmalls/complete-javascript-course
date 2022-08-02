@@ -68,7 +68,7 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // APP
-const App = (function () {
+const App = (function (accounts) {
   const State = {
     accounts: enrichAccounts(accounts),
     currentAccount: null,
@@ -253,6 +253,6 @@ const App = (function () {
   }
 
   return {init}
-})()
+})(accounts)
 
 App.init()
