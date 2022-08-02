@@ -229,16 +229,38 @@ function initTimer() {
 
 let currentAccount
 let sorted = false
-updateDate()
 accounts.forEach(acc => {
   acc.username = acc.owner.split(' ').map(i => i.at(0).toLowerCase()).join('')
 })
 
-loginForm.addEventListener('submit', handleLoginFormSubmit)
-closeAccountForm.addEventListener('submit', handleAccountCloseFormSubmit)
-transferMoneyForm.addEventListener('submit', handleTransferFormSubmit)
-loanForm.addEventListener('submit', handleRequestLoanFormSubmit)
-btnSort.addEventListener('click', () => {
-  displayMovements(currentAccount, !sorted)
-  sorted = !sorted
-})
+
+const App = (function () {
+  const State = {
+    accounts: enrichAccounts(accounts),
+    currentAccount: null,
+    sorted: false
+  }
+
+  function enrichAccounts(accounts) {
+    return accounts.map(acc => {
+      acc.username = acc.owner.split(' ').map(i => i.at(0).toLowerCase()).join('')
+      return acc
+    })
+  }
+
+  function init() {
+    updateDate()
+    loginForm.addEventListener('submit', handleLoginFormSubmit)
+    closeAccountForm.addEventListener('submit', handleAccountCloseFormSubmit)
+    transferMoneyForm.addEventListener('submit', handleTransferFormSubmit)
+    loanForm.addEventListener('submit', handleRequestLoanFormSubmit)
+    btnSort.addEventListener('click', () => {
+      displayMovements(currentAccount, !sorted)
+      sorted = !sorted
+    })
+  }
+
+  return {init}
+})()
+
+App.init()
