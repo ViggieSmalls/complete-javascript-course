@@ -122,7 +122,6 @@ function initApp() {
   containerApp.style.opacity = '1'
   displayMovements(currentAccount)
   calculateSummary(currentAccount)
-  initTimer()
 }
 
 function displayMovements(account, sorted = false) {
@@ -197,35 +196,6 @@ function logoutCurrentAccount() {
   currentAccount = null
 }
 
-function displayTimeUntilLogout(t) {
-  const minutes = Math.floor(t / 60)
-  const seconds = t % 60
-  labelTimer.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0')
-}
-
-/*after 1 min of inactivity, the user will be logged out*/
-function setLogoutInterval() {
-  let timeToLogout = 60 // seconds
-  const myInterval = setInterval(() => {
-    if (timeToLogout <= 0) {
-      console.log("logging out")
-      logoutCurrentAccount(currentAccount)
-      clearInterval(myInterval)
-    } else {
-      timeToLogout--
-      displayTimeUntilLogout(timeToLogout)
-    }
-  }, 1000)
-  return myInterval
-}
-
-function initTimer() {
-  let logoutInterval = setLogoutInterval()
-  document.querySelector('body').addEventListener('click', () => {
-    clearInterval(logoutInterval)
-    logoutInterval = setLogoutInterval()
-  })
-}
 
 let currentAccount
 let sorted = false
@@ -238,7 +208,9 @@ const App = (function () {
   const State = {
     accounts: enrichAccounts(accounts),
     currentAccount: null,
-    sorted: false
+    sorted: false,
+    timeToLogout: 60,  // seconds
+    logoutInterval: null
   }
 
   function enrichAccounts(accounts) {
@@ -248,16 +220,40 @@ const App = (function () {
     })
   }
 
+  function displayTimeUntilLogout(t) {
+    const minutes = Math.floor(t / 60)
+    const seconds = t % 60
+    labelTimer.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0')
+  }
+
+  function resetLogoutInterval() {
+    clearInterval(State.logoutInterval)
+    State.timeToLogout = 60 // seconds
+    State.logoutInterval = setInterval(() => {
+      if (State.timeToLogout <= 0) {
+        logoutCurrentAccount(currentAccount)
+        clearInterval(State.logoutInterval)
+      } else {
+        State.timeToLogout--
+        displayTimeUntilLogout(State.timeToLogout)
+      }
+    }, 1000)
+  }
+
   function init() {
     updateDate()
+    // forms
     loginForm.addEventListener('submit', handleLoginFormSubmit)
     closeAccountForm.addEventListener('submit', handleAccountCloseFormSubmit)
     transferMoneyForm.addEventListener('submit', handleTransferFormSubmit)
     loanForm.addEventListener('submit', handleRequestLoanFormSubmit)
+    // sort movements
     btnSort.addEventListener('click', () => {
       displayMovements(currentAccount, !sorted)
       sorted = !sorted
     })
+    //
+    document.querySelector('body').addEventListener('click', resetLogoutInterval)
   }
 
   return {init}
