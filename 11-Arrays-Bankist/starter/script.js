@@ -68,142 +68,6 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // APP
-function authenticate(username, pin) {
-  for (let account of accounts) {
-    const usernameExists = username === account.username
-    const pinCorrect = pin === String(account.pin)
-    if (usernameExists && pinCorrect) {
-      currentAccount = account
-      return true
-    }
-  }
-  return false
-}
-
-function handleLoginFormSubmit(evt) {
-  evt.preventDefault()
-  const formData = new FormData(evt.target);
-  authenticate(formData.get('user'), formData.get('password'))
-  if (currentAccount) {
-    evt.target.reset()
-    evt.target.blur()
-    initApp()
-  } else {
-    alert("Username or password incorrect")
-  }
-}
-
-function handleAccountCloseFormSubmit(evt) {
-  evt.preventDefault()
-  const formData = new FormData(evt.target)
-  if (formData.get('user') === currentAccount.username && formData.get('password') === String(currentAccount.pin)) {
-    const index = accounts.findIndex(acc => acc === currentAccount)
-    if (index >= 0) {
-      accounts.splice(index, 1)
-      logoutCurrentAccount()
-    }
-  } else {
-    alert("Invalid username or password")
-  }
-}
-
-function displayDateAsString(date) {
-  return String(date.getDate()).padStart(2, '0') + '/' + String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getFullYear())
-}
-
-/* updates the date displayed on the screen. updates every minute*/
-function updateDate() {
-  const now = new Date()
-  labelDate.textContent = displayDateAsString(now)
-  setTimeout(updateDate, (60 - now.getSeconds()) * 1000)
-}
-
-function initApp() {
-  containerApp.style.opacity = '1'
-  displayMovements(currentAccount)
-  calculateSummary(currentAccount)
-}
-
-function displayMovements(account, sorted = false) {
-  containerMovements.innerHTML = ''
-  let movements
-  if (sorted) {
-    movements = account.movements.slice().sort((a, b) => a - b)
-  } else {
-    movements = account.movements
-  }
-  movements.forEach((value, index) => {
-    const type = value > 0 ? 'deposit' : 'withdrawal'
-    const html = `<div class="movements__row">
-          <div class="movements__type movements__type--${type}">${index + 1} ${type}</div>
-          <div class="movements__value">${value}€</div>
-        </div>`
-    containerMovements.insertAdjacentHTML('afterbegin', html)
-  })
-}
-
-function calculateSummary(account) {
-  // in
-  const totalIn = account.movements.filter(v => v > 0).reduce((a, b) => a + b)
-  labelSumIn.textContent = String(totalIn) + '€'
-  // out
-  const totalOut = account.movements.filter(v => v < 0).reduce((a, b) => a + b)
-  labelSumOut.textContent = String(totalOut) + '€'
-  // balance
-  labelBalance.textContent = String(totalIn + totalOut) + "€"
-  // interest
-  const interest = account.movements
-    .filter(v => v > 0)
-    .map(v => v * account.interestRate / 100)
-    .filter(v => v >= 1)
-    .reduce((a, b) => a + b, 0)
-  labelSumInterest.textContent = String(interest) + "€"
-}
-
-function handleTransferFormSubmit(evt) {
-  evt.preventDefault()
-  const formData = new FormData(evt.target)
-  const username = formData.get("username")
-  const amount = Number(formData.get("amount"))
-  const account = accounts.find(acc => acc.username === username)
-  if (account && amount > 0) {
-    account.movements.push(amount)
-    currentAccount.movements.push(-amount)
-    displayMovements(currentAccount, sorted)
-    calculateSummary(currentAccount)
-  } else if (!account) {
-    alert(`Account with username ${username} does not exist`)
-  } else if (amount <= 0) {
-    alert("Amount must be positive")
-  }
-}
-
-function handleRequestLoanFormSubmit(evt) {
-  evt.preventDefault()
-  const formData = new FormData(evt.target)
-  const amount = Number(formData.get("amount"))
-  if (currentAccount.movements.some(val => val >= amount * 0.1)) {
-    currentAccount.movements.push(amount)
-    displayMovements(currentAccount)
-    calculateSummary(currentAccount)
-  } else {
-    alert("The allowed amount can not exceed 10 times the value of the highest transfer")
-  }
-}
-
-function logoutCurrentAccount() {
-  containerApp.style.opacity = '0'
-  currentAccount = null
-}
-
-
-let currentAccount
-let sorted = false
-accounts.forEach(acc => {
-  acc.username = acc.owner.split(' ').map(i => i.at(0).toLowerCase()).join('')
-})
-
-
 const App = (function () {
   const State = {
     accounts: enrichAccounts(accounts),
@@ -240,10 +104,133 @@ const App = (function () {
     }, 1000)
   }
 
+  function authenticate(username, pin) {
+    for (let account of State.accounts) {
+      const usernameExists = username === account.username
+      const pinCorrect = pin === String(account.pin)
+      if (usernameExists && pinCorrect) {
+        return account
+      }
+    }
+    return null
+  }
+
+  function displayMovements() {
+    containerMovements.innerHTML = ''
+    let movements
+    if (State.sorted) {
+      movements = State.currentAccount.movements.slice().sort((a, b) => a - b)
+    } else {
+      movements = State.currentAccount.movements
+    }
+    movements.forEach((value, index) => {
+      const type = value > 0 ? 'deposit' : 'withdrawal'
+      const html = `<div class="movements__row">
+          <div class="movements__type movements__type--${type}">${index + 1} ${type}</div>
+          <div class="movements__value">${value}€</div>
+        </div>`
+      containerMovements.insertAdjacentHTML('afterbegin', html)
+    })
+  }
+
+  function calculateSummary() {
+    // in
+    const totalIn = State.currentAccount.movements.filter(v => v > 0).reduce((a, b) => a + b)
+    labelSumIn.textContent = String(totalIn) + '€'
+    // out
+    const totalOut = State.currentAccount.movements.filter(v => v < 0).reduce((a, b) => a + b)
+    labelSumOut.textContent = String(totalOut) + '€'
+    // balance
+    labelBalance.textContent = String(totalIn + totalOut) + "€"
+    // interest
+    const interest = State.currentAccount.movements
+      .filter(v => v > 0)
+      .map(v => v * State.currentAccount.interestRate / 100)
+      .filter(v => v >= 1)
+      .reduce((a, b) => a + b, 0)
+    labelSumInterest.textContent = String(interest) + "€"
+  }
+
+  function draw() {
+    containerApp.style.opacity = '1'
+    displayMovements()
+    calculateSummary()
+    resetLogoutInterval()
+  }
+
+  function handleLoginFormSubmit(evt) {
+    evt.preventDefault()
+    const formData = new FormData(evt.target);
+    const account = authenticate(formData.get('user'), formData.get('password'))
+    if (account) {
+      State.currentAccount = account
+      evt.target.reset()
+      evt.target.blur()
+      draw()
+    } else {
+      alert("Username or password incorrect")
+    }
+  }
+
+  function handleAccountCloseFormSubmit(evt) {
+    evt.preventDefault()
+    const formData = new FormData(evt.target)
+    if (formData.get('user') === State.currentAccount.username && formData.get('password') === String(State.currentAccount.pin)) {
+      const index = State.accounts.findIndex(acc => acc === State.currentAccount)
+      if (index >= 0) {
+        State.accounts.splice(index, 1)
+        logout()
+      }
+    } else {
+      alert("Invalid username or password")
+    }
+  }
+
+  function handleRequestLoanFormSubmit(evt) {
+    evt.preventDefault()
+    const formData = new FormData(evt.target)
+    const amount = Number(formData.get("amount"))
+    if (State.currentAccount.movements.some(val => val >= amount * 0.1)) {
+      State.currentAccount.movements.push(amount)
+      displayMovements()
+      calculateSummary()
+    } else {
+      alert("The allowed amount can not exceed 10 times the value of the highest transfer")
+    }
+  }
+
+  function handleTransferFormSubmit(evt) {
+    evt.preventDefault()
+    const formData = new FormData(evt.target)
+    const username = formData.get("username")
+    const amount = Number(formData.get("amount"))
+    const account = State.accounts.find(acc => acc.username === username)
+    if (account && amount > 0) {
+      account.movements.push(amount)
+      State.currentAccount.movements.push(-amount)
+      displayMovements()
+      calculateSummary()
+    } else if (!account) {
+      alert(`Account with username ${username} does not exist`)
+    } else if (amount <= 0) {
+      alert("Amount must be positive")
+    }
+  }
+
+  function displayDateAsString(date) {
+    return String(date.getDate()).padStart(2, '0') + '/' + String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getFullYear())
+  }
+
+  /* updates the date displayed on the screen. updates every minute*/
+  function updateDate() {
+    const now = new Date()
+    labelDate.textContent = displayDateAsString(now)
+    setTimeout(updateDate, (60 - now.getSeconds()) * 1000)
+  }
+
   function logout() {
     containerApp.style.opacity = '0'
     State.currentAccount = null
-    currentAccount = null  // todo: remove after refactoring
   }
 
   function init() {
@@ -255,8 +242,8 @@ const App = (function () {
     loanForm.addEventListener('submit', handleRequestLoanFormSubmit)
     // sort movements
     btnSort.addEventListener('click', () => {
-      displayMovements(currentAccount, !sorted)
-      sorted = !sorted
+      State.sorted = !State.sorted
+      displayMovements()
     })
     //
     document.querySelector('body').addEventListener('click', resetLogoutInterval)
