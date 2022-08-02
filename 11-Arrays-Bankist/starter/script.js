@@ -180,6 +180,7 @@ const App = (function () {
       if (index >= 0) {
         State.accounts.splice(index, 1)
         logout()
+        evt.target.reset()
       }
     } else {
       alert("Invalid username or password")
@@ -194,6 +195,7 @@ const App = (function () {
       State.currentAccount.movements.push(amount)
       displayMovements()
       calculateSummary()
+      evt.target.reset()
     } else {
       alert("The allowed amount can not exceed 10 times the value of the highest transfer")
     }
@@ -210,6 +212,7 @@ const App = (function () {
       State.currentAccount.movements.push(-amount)
       displayMovements()
       calculateSummary()
+      evt.target.reset()
     } else if (!account) {
       alert(`Account with username ${username} does not exist`)
     } else if (amount <= 0) {
