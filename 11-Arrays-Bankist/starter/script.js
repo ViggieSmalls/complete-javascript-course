@@ -197,7 +197,7 @@ function logoutCurrentAccount() {
   currentAccount = null
 }
 
-function updateTimer(t) {
+function displayTimeUntilLogout(t) {
   const minutes = Math.floor(t / 60)
   const seconds = t % 60
   labelTimer.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0')
@@ -213,7 +213,7 @@ function setLogoutInterval() {
       clearInterval(myInterval)
     } else {
       timeToLogout--
-      updateTimer(timeToLogout)
+      displayTimeUntilLogout(timeToLogout)
     }
   }, 1000)
   return myInterval
