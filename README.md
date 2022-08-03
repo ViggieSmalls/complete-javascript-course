@@ -23,10 +23,20 @@
   > -- <cite>[MDN Web docs](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction)</cite> 
 * Every object in a document inherits from a `Node`.
 * `Node` as well as all inheriting classes add their own methods, like e.g. `.querySelector()`
-* The four main objects that inherit from `Node` are the _Element_, _Text_, _Comment_, and `document`
+* The four main objects that inherit from `Node` are the _Element_, _Text_, _Comment_, and `document.documentElement`
 * `Node` also inherits from `EventTarget`.
   This provides methods like `.addEventListener()`
 * The `window` object also inherits from `EventTarget`
 
 ![DOM](DOM.png "How the DOM API is organized behind the scenes")
+
+### Selecting, creating and deleting Elements
+
+* `querySelector` returns a `NodeList` that is not updated when elements are deleted.
+  `getElementsByTagName()` returns a `HTMLCollection` that is updated when elements are deleted
+* Methods to insert inside an element: `element.prepend()`, `element.append()`
+* Methods to insert as a sibling to an element: `element.before()`, `element.after()`
+* `Element.insertAdjacentHTML()` can do the same with a different syntax.
+* Elements created with `document.createElement()` are unique, and have to be copied with `element.cloneNode()` to be duplicated.
+  `cloneNode` takes a boolean as an argument to specify if the child elements should be copied as well.
 
