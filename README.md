@@ -11,7 +11,8 @@
 * `Math` operations are not possible.
 
 
-### Working with dates
+### I18N
 * `Intl.DateTimeFormat(locale, options)` can be used to display dates based on the user's preference.
-  The locale can be determined by `navigator.locale` for example.
+* `Intl.NumberFormat(locale, options)` can be used to display numbers, units and currencies.
+* The locale can be determined by `navigator.locale` for example.
 
