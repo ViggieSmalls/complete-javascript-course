@@ -23,7 +23,7 @@
   > -- <cite>[MDN Web docs](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction)</cite> 
 * Every object in a document inherits from a `Node`.
 * `Node` as well as all inheriting classes add their own methods, like e.g. `.querySelector()`
-* The four main objects that inherit from `Node` are the _HTML Node_, _Text Node_, _Comment Node_, and `document`
+* The four main objects that inherit from `Node` are the _Element_, _Text_, _Comment_, and `document`
 * `Node` also inherits from `EventTarget`.
   This provides methods like `.addEventListener()`
 * The `window` object also inherits from `EventTarget`
