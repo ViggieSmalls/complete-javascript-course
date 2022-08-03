@@ -19,8 +19,7 @@
 ## Advanced DOM and Events
 
 * > The Document Object Model (DOM) is the data representation of the objects that comprise the structure and content of a document on the web.
-  > 
-  > -- <cite>[MDN Web docs](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction)</cite> 
+  > &mdash; <cite>[MDN Web docs][1]</cite> 
 * Every object in a document inherits from a `Node`.
 * `Node` as well as all inheriting classes add their own methods, like e.g. `.querySelector()`
 * The four main objects that inherit from `Node` are the _Element_, _Text_, _Comment_, and `document.documentElement`
@@ -40,3 +39,4 @@
 * Elements created with `document.createElement()` are unique, and have to be copied with `element.cloneNode()` to be duplicated.
   `cloneNode` takes a boolean as an argument to specify if the child elements should be copied as well.
 
+[1]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
