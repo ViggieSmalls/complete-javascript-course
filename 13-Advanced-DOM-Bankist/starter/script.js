@@ -7,6 +7,8 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScroll = document.querySelector('.btn--scroll-to')
+const section1 = document.getElementById('section--1')
 
 const openModal = function (evt) {
   evt.preventDefault()
@@ -28,3 +30,5 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+btnScroll.addEventListener('click', () => {section1.scrollIntoView({behavior: "smooth"})})
