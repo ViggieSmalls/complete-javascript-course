@@ -1,5 +1,35 @@
 # Course notes
 
+## A Closer Look at Functions
+
+* First-class functions: functions in javascript can do what everybody else can do, e.g. assigned to a value, passed as an argument, returned from a function
+* Functions in javascript inherit from the _Object_ prototype, so they can be assigned key-value pairs or have methods attached to them, such as `bind()`
+* Higher-order functions: A function that receives another function as an argument or returns a function, e.g. `element.addEventListener()`
+* In regular function calls, the `this` keyword points to `undefined`
+* The `this` keyword can be assigned to a function with the function's methods `call()` or `apply()`.
+  In an event handler, the `this` keyword points to the element it is attached to
+* The `bind()` method attaches another object to the `this` keyword of a function.
+  It can also pass default arguments for a function, which is called [partial application][2].
+
+### IIFE
+
+```javascript
+(function () {
+  console.log('This is called only once')
+})();
+```
+
+* used to call code only once or define scoped variables
+* variables defined with `let` or `const` are also scoped inside a block, while variables declared with `var` are not scoped
+
+```javascript
+{
+  const a = 'this is scoped'
+  let b = 'this is also scoped'
+  var c = 'this is not scoped'
+}
+```
+
 ## Numbers, Dates, Intl and Timers
 
 ### Working with BigInt
@@ -39,4 +69,12 @@
 * Elements created with `document.createElement()` are unique, and have to be copied with `element.cloneNode()` to be duplicated.
   `cloneNode` takes a boolean as an argument to specify if the child elements should be copied as well.
 
+### Events
+* In the capturing phase, the event is captured in the _Document_ and travels along the DOM tree to the target element
+* In the bubbling phase, events travel up the DOM tree to its parent elements and can trigger events there
+* Not all events have a capturing and a bubbling phase but are only triggered on the target element
+* Events can also be handled in the capturing phase by setting the option `{capture: true}` to `element.addEventListener()`
+* **Event delegation** increases performance and saves memory
+
 [1]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
+[2]: https://en.wikipedia.org/wiki/Partial_application
