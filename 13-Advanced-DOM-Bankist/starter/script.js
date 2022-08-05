@@ -8,10 +8,12 @@ const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScroll = document.querySelector('.btn--scroll-to')
+const header = document.querySelector('.header')
 const section1 = document.getElementById('section--1')
 const operationsTabContainer = document.querySelector('.operations__tab-container')
 const operationsTabs = document.querySelectorAll('.operations__tab')
 const operationsContents = document.querySelectorAll('.operations__content')
+const nav = document.querySelector('.nav')
 
 ////////////////////////////////////////////////////////////////////////////
 // Modal
@@ -56,3 +58,18 @@ operationsTabContainer.addEventListener('click', function(evt) {
   btn.classList.add('operations__tab--active')
   document.querySelector(`.operations__content--${id}`).classList.add('operations__content--active')
 })
+
+////////////////////////////////////////////////////////////////////////////
+// Sticky navigation
+
+function stickyNav(entries) {
+  const [entry] = entries
+  if (!entry.isIntersecting) nav.classList.add('sticky')
+  else nav.classList.remove('sticky')
+}
+
+(new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${nav.getBoundingClientRect().height}px`
+})).observe(header)
