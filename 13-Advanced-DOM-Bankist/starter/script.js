@@ -16,6 +16,10 @@ const operationsTabs = document.querySelectorAll('.operations__tab')
 const operationsContents = document.querySelectorAll('.operations__content')
 const nav = document.querySelector('.nav')
 const lazyImages = document.querySelectorAll('.lazy-img')
+const slides = document.querySelectorAll('.slide')
+const btnLeft = document.querySelector('.slider__btn--left')
+const btnRight = document.querySelector('.slider__btn--right')
+const dotsContainer = document.querySelector('.dots')
 
 ////////////////////////////////////////////////////////////////////////////
 // Modal
@@ -44,12 +48,14 @@ document.addEventListener('keydown', function (e) {
 ////////////////////////////////////////////////////////////////////////////
 // Smooth scroll
 
-btnScroll.addEventListener('click', () => {section1.scrollIntoView({behavior: "smooth"})})
+btnScroll.addEventListener('click', () => {
+  section1.scrollIntoView({behavior: "smooth"})
+})
 
 ////////////////////////////////////////////////////////////////////////////
 // Tabs
 
-operationsTabContainer.addEventListener('click', function(evt) {
+operationsTabContainer.addEventListener('click', function (evt) {
   const btn = evt.target.closest('.btn')
   if (!btn) return;
   // remove all active classes
@@ -85,6 +91,7 @@ function revealSection(entries, observer) {
   entry.target.classList.remove('section--hidden')
   observer.unobserve(entry.target)
 }
+
 const observer = new IntersectionObserver(revealSection, {
   root: null,
   threshold: 0.15,
@@ -99,13 +106,14 @@ allSections.forEach(section => {
 
 function lazyLoad(entries, observer) {
   const [entry] = entries
-  if(!entry.isIntersecting) return
+  if (!entry.isIntersecting) return
   entry.target.src = entry.target.dataset.src
   entry.target.addEventListener('load', function (evt) {
     evt.target.classList.remove('lazy-img')
   })
   observer.unobserve(entry.target)
 }
+
 const lazyObserver = new IntersectionObserver(lazyLoad, {
   root: null,
   threshold: 0,
@@ -118,24 +126,40 @@ lazyImages.forEach(el => {
 ////////////////////////////////////////////////////////////////////////////
 // Slider
 
-const slides = document.querySelectorAll('.slide')
-const btnLeft = document.querySelector('.slider__btn--left')
-const btnRight = document.querySelector('.slider__btn--right')
-let currentSlide = 0
+let currentSlide = 0;
+
+function prevSlide() {
+  goToSlide(currentSlide > 0 ? currentSlide - 1 : slides.length - 1)
+}
+
+function nextSlide() {
+  goToSlide(currentSlide < slides.length - 1 ? currentSlide + 1 : 0)
+}
+
+// insert dots for slider
+(function () {
+  slides.forEach((_el, idx) => {
+    dotsContainer.insertAdjacentHTML('beforeend', `<button class="dots__dot" data-slide="${idx}"/>`)
+  })
+})()
 
 function goToSlide(n) {
-  const i = n < 0 ? slides.length + n : n
-  slides.forEach((el, idx, nodeList) => {
-    el.style.transform = `translateX(${100 * (idx - i)}%)`
+  currentSlide = n
+  slides.forEach((el, idx) => {
+    el.style.transform = `translateX(${100 * (idx - n)}%)`
   })
+  dotsContainer.childNodes.forEach(el => el.classList.remove('dots__dot--active'))
+  dotsContainer.querySelector(`button[data-slide="${n}"]`).classList.add('dots__dot--active')
 }
-goToSlide(currentSlide)
 
-btnLeft.addEventListener('click', function () {
-  currentSlide--
-  goToSlide(currentSlide % slides.length)
+goToSlide(currentSlide)
+btnLeft.addEventListener('click', prevSlide)
+btnRight.addEventListener('click', nextSlide)
+dotsContainer.addEventListener('click', function (evt) {
+  const btn = evt.target.closest('.dots__dot')
+  if (btn) goToSlide(+btn.dataset.slide)
 })
-btnRight.addEventListener('click', function () {
-  currentSlide++
-  goToSlide(currentSlide % slides.length)
+document.addEventListener('keydown', function (evt) {
+  evt.key === 'ArrowLeft' && prevSlide()
+  evt.key === 'ArrowRight' && nextSlide()
 })
