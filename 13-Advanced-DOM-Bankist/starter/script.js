@@ -15,6 +15,7 @@ const operationsTabContainer = document.querySelector('.operations__tab-containe
 const operationsTabs = document.querySelectorAll('.operations__tab')
 const operationsContents = document.querySelectorAll('.operations__content')
 const nav = document.querySelector('.nav')
+const lazyImages = document.querySelectorAll('.lazy-img')
 
 ////////////////////////////////////////////////////////////////////////////
 // Modal
@@ -91,4 +92,25 @@ const observer = new IntersectionObserver(revealSection, {
 allSections.forEach(section => {
   section.classList.add('section--hidden')
   observer.observe(section)
+})
+
+////////////////////////////////////////////////////////////////////////////
+// Lazy load images
+
+function lazyLoad(entries, observer) {
+  const [entry] = entries
+  if(!entry.isIntersecting) return
+  entry.target.src = entry.target.dataset.src
+  entry.target.addEventListener('load', function (evt) {
+    evt.target.classList.remove('lazy-img')
+  })
+  observer.unobserve(entry.target)
+}
+const lazyObserver = new IntersectionObserver(lazyLoad, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px'
+})
+lazyImages.forEach(el => {
+  lazyObserver.observe(el)
 })
