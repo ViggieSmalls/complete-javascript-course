@@ -75,6 +75,19 @@
 * Not all events have a capturing and a bubbling phase but are only triggered on the target element
 * Events can also be handled in the capturing phase by setting the option `{capture: true}` to `element.addEventListener()`
 * **Event delegation** increases performance and saves memory
+* > The DOMContentLoaded event fires when the initial HTML document has been completely loaded and parsed, without waiting for stylesheets, images, and subframes to finish loading.
+  > &mdash; <cite>[MDN Web docs][3]</cite> 
+* > The load event is fired when the whole page has loaded, including all dependent resources such as stylesheets and images.
+  > &mdash; <cite>[MDN Web docs][3]</cite>
+* Beware of the `beforunload` event
+
+### Script loading
+* For modern browsers, `script` tags should be placed in the `head` of the html document, because script can be downloaded asynchronously
+* Use `defer` when the order of the scripts matter, and use `async` if the code of your script is independent of your site, e.g. Google Analytics
+
+![async/defer](async_defer.png "Behaviour of async and defer when placed in the head or at the end of the body")
 
 [1]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
 [2]: https://en.wikipedia.org/wiki/Partial_application
+[3]: https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event
+[4]: https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event
