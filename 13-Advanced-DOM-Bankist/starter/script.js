@@ -114,3 +114,28 @@ const lazyObserver = new IntersectionObserver(lazyLoad, {
 lazyImages.forEach(el => {
   lazyObserver.observe(el)
 })
+
+////////////////////////////////////////////////////////////////////////////
+// Slider
+
+const slides = document.querySelectorAll('.slide')
+const btnLeft = document.querySelector('.slider__btn--left')
+const btnRight = document.querySelector('.slider__btn--right')
+let currentSlide = 0
+
+function goToSlide(n) {
+  const i = n < 0 ? slides.length + n : n
+  slides.forEach((el, idx, nodeList) => {
+    el.style.transform = `translateX(${100 * (idx - i)}%)`
+  })
+}
+goToSlide(currentSlide)
+
+btnLeft.addEventListener('click', function () {
+  currentSlide--
+  goToSlide(currentSlide % slides.length)
+})
+btnRight.addEventListener('click', function () {
+  currentSlide++
+  goToSlide(currentSlide % slides.length)
+})
