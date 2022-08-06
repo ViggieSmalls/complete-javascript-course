@@ -92,6 +92,94 @@
 
 ![async/defer](async_defer.png "Behaviour of async and defer when placed in the head or at the end of the body")
 
+## Object Oriented Programming in JavaScript
+
+* Objects/Instances are linked to Prototype classes
+* Objects delegate behaviour to their prototype class
+* The `new` operator, when used on a constructor function performs following 4 steps:
+  1. Create a new empty object `{}`
+  2. Set the `this` keyword of the function to the new object
+  3. Link the prototype to the new object (sets the `__proto__` attribute of the object to the `prototype` attribute of the constructor function)
+  4. return the new object
+* `{...}` is a short form for `new Object()`
+
+### Constructor functions
+
+#### Inheritance with constructor functions
+```javascript
+function Person(fullName, birthYear) {
+  this.fullName = fullName
+  this.birthYear = birthYear
+}
+
+function Student(fullName, birthYear, course) {
+  Person.call(this, fullName, birthYear)
+  this.course = course
+}
+
+Student.prototype = Object.create(Person.prototype)
+Student.prototype.constructor = Student
+```
+
+### ES6 Classes
+
+```javascript
+class Person {
+  constructor(fullName, birthYear) {
+    this._fullName = fullName
+    this.birthYear = birthYear
+  }
+  // method attatched to the prototype
+  calcAge() {
+    const now = new Date()
+    return now.getFullYear() - this.birthYear
+  }
+  // getters and setters
+  get fullName() {
+    return this._fullName
+  }
+  set fullName(name) {
+    // do validation?
+    this._fullName = name
+  }
+  // static methods: only available on the Person class, not on the prototype
+  static hey() {
+    console.log("Hello there")  
+  }
+}
+```
+
+* classes are **not hoisted**
+* classes are **first class citizens**
+* classes are executed in **strict mode**
+
+#### Inheritance with ES6 classes
+
+```javascript
+class Student extends Person {
+  constructor(fullName, birthYear, course) {
+    // super() needs to happen first to initialize the this keyword
+    super(fullName, birthYear)
+    this.course = course
+  }
+}
+```
+
+### Object.create()
+```javascript
+const PersonPrototype = {
+  init(fullName, birthYear) {
+    this.fullName = fullName
+    this.birthYear = birthYear
+  }
+}
+const StudentPrototype = Object.create(PersonPrototype)
+StudentPrototype.init = function (fullName, birthYear, course) {
+  PersonPrototype.init.call(this, fullName, birthYear)
+  this.course = course
+}
+```
+
 [1]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
 [2]: https://en.wikipedia.org/wiki/Partial_application
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event
