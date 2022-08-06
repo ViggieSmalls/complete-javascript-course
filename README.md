@@ -82,8 +82,13 @@
 * Beware of the `beforunload` event
 
 ### Script loading
-* For modern browsers, `script` tags should be placed in the `head` of the html document, because script can be downloaded asynchronously
-* Use `defer` when the order of the scripts matter, and use `async` if the code of your script is independent of your site, e.g. Google Analytics
+
+| ` async `                                                                  | ` defer `                                                             |
+|----------------------------------------------------------------------------|-----------------------------------------------------------------------|
+| script file is downloaded asynchronously                                   | script file is downloaded asynchronously                              |
+| the execution of the script file pauses the HTML parsing                   | the script file is executed at the end of the HTML parsing            |
+| the DOMContentLoaded event is not dependent on the execution of the script | the DOMContentLoaded event is fired when the script is done executing |
+| scripts are executed as soon as they are finished loading                  | scripts are executed in order                                         |
 
 ![async/defer](async_defer.png "Behaviour of async and defer when placed in the head or at the end of the body")
 
