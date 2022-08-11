@@ -64,6 +64,7 @@ class Cycling extends Workout {
 
 class App {
   _map = L.map('map')
+  _mapZoom = 13
   _mapClickEvt
   _workouts = []
 
@@ -71,6 +72,7 @@ class App {
     this._getPosition()
     form.addEventListener('submit', this._handleFormSubmit.bind(this))
     inputType.addEventListener('change', this._toggleElevationField)
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this))
   }
 
   _getPosition() {
@@ -88,7 +90,7 @@ class App {
     const latitude = position.coords.latitude
     const longitude = position.coords.longitude
     const coords = [latitude, longitude]
-    this._map.setView(coords, 13);
+    this._map.setView(coords, this._mapZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -206,6 +208,18 @@ class App {
   _toggleElevationField() {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+  }
+
+  _moveToPopup(evt) {
+    const workoutEl = evt.target.closest('.workout')
+    if (!workoutEl) return
+    const workout = this._getWorkoutById(workoutEl.dataset.id)
+    if (!workout) return
+    this._map.setView(workout.coords, this._mapZoom)
+  }
+
+  _getWorkoutById(id) {
+    return this._workouts.find(i => i.id === id)
   }
 }
 
