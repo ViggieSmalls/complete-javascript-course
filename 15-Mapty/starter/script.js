@@ -11,6 +11,51 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+class Workout {
+  date = new Date()
+  id = String(Date.now())
+  constructor(distance, duration, coords) {
+    this.distance = distance
+    this.duration = duration
+    this.coords = coords
+  }
+}
+
+class Running extends Workout{
+  type = 'running'
+  constructor(distance, duration, coords, cadence) {
+    super(distance, duration, coords)
+    this.cadence = cadence
+  }
+
+  get pace() {
+    // min/km
+    return (this.duration / this.distance).toFixed(1)
+  }
+
+  get description() {
+    return `Running on ${this.date.toLocaleDateString(navigator.language, {day: 'numeric', month: 'long'})}`
+  }
+}
+
+class Cycling extends Workout{
+  type = 'cycling'
+  constructor(distance, duration, coords, elevationGain) {
+    super(distance, duration, coords)
+    this.cadence = elevationGain
+  }
+
+  get speed() {
+    // km/h
+    return (this.distance / (this.duration / 60)).toFixed(1)
+  }
+
+  get description() {
+    return `Cycling on ${this.date.toLocaleDateString(navigator.language, {day: 'numeric', month: 'long'})}`
+  }
+}
+
+
 class App {
   _map = L.map('map')
   _mapEvt
@@ -53,7 +98,15 @@ class App {
 
   _handleFormSubmit(evt) {
     evt.preventDefault()
+
+    // validate inputs
+
+    // create object
+
+    // add marker
     this._createMarker("Workout!")
+    // clear form
+
   }
 
   _createMarker(msg) {
