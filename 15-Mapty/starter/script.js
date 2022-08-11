@@ -58,7 +58,7 @@ class Cycling extends Workout{
 
 class App {
   _map = L.map('map')
-  _mapEvt
+  _mapClickEvt
   _workouts = []
 
   constructor() {
@@ -81,7 +81,6 @@ class App {
     const latitude = position.coords.latitude
     const longitude = position.coords.longitude
     const coords = [latitude, longitude]
-    console.log(this)
     this._map.setView(coords, 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -94,7 +93,7 @@ class App {
   _mapOnClick(evt) {
     form.classList.remove('hidden')
     inputDistance.focus()
-    this._mapEvt = evt
+    this._mapClickEvt = evt
   }
 
   _handleFormSubmit(evt) {
@@ -106,7 +105,7 @@ class App {
     const duration = inputDuration.value
     const cadence = inputCadence.value
     const elevation = inputElevation.value
-    const {lat, lng} = this._mapEvt.latlng
+    const {lat, lng} = this._mapClickEvt.latlng
     const coords = [lat, lng]
 
     // create object
