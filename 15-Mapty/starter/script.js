@@ -11,9 +11,13 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
+const validInputs = (...inputs) => inputs.every(inp => Number.isFinite(inp));
+const allPositive = (...inputs) => inputs.every(inp => inp > 0);
+
 class Workout {
   date = new Date()
   id = String(Date.now())
+
   constructor(distance, duration, coords) {
     this.distance = distance
     this.duration = duration
@@ -21,8 +25,9 @@ class Workout {
   }
 }
 
-class Running extends Workout{
+class Running extends Workout {
   type = 'running'
+
   constructor(distance, duration, coords, cadence) {
     super(distance, duration, coords)
     this.cadence = cadence
@@ -38,8 +43,9 @@ class Running extends Workout{
   }
 }
 
-class Cycling extends Workout{
+class Cycling extends Workout {
   type = 'cycling'
+
   constructor(distance, duration, coords, elevationGain) {
     super(distance, duration, coords)
     this.cadence = elevationGain
@@ -99,21 +105,24 @@ class App {
   _handleFormSubmit(evt) {
     evt.preventDefault()
 
-    // validate inputs
+    // get inputs
     const type = inputType.value
-    const distance = inputDistance.value
-    const duration = inputDuration.value
-    const cadence = inputCadence.value
-    const elevation = inputElevation.value
+    const distance = +inputDistance.value
+    const duration = +inputDuration.value
+    const cadence = +inputCadence.value
+    const elevation = +inputElevation.value
     const {lat, lng} = this._mapClickEvt.latlng
     const coords = [lat, lng]
 
     // create object
     let workout
-    if (type === 'running') {
+    if (type === 'running' && validInputs(distance, duration, cadence) && allPositive(distance, duration, cadence)) {
       workout = new Running(distance, duration, coords, cadence)
-    } else if (type === 'cycling') {
+    } else if (type === 'cycling' && validInputs(distance, duration, elevation) && allPositive(distance, duration)) {
       workout = new Cycling(distance, duration, coords, elevation)
+    } else {
+      alert("invalid inputs")
+      return
     }
     this._workouts.push(workout)
 
