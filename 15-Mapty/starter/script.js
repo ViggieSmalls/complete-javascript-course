@@ -70,6 +70,7 @@ class App {
 
   constructor() {
     this._getPosition()
+    this._loadWorkouts()
     form.addEventListener('submit', this._handleFormSubmit.bind(this))
     inputType.addEventListener('change', this._toggleElevationField)
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this))
@@ -97,6 +98,12 @@ class App {
     }).addTo(this._map);
 
     this._map.on('click', this._mapOnClick.bind(this))
+
+    if (this._workouts) {
+      for (const workout of this._workouts) {
+        this._createMarker(workout)
+      }
+    }
   }
 
   _mapOnClick(evt) {
@@ -127,7 +134,7 @@ class App {
       alert("invalid inputs")
       return
     }
-    this._workouts.push(workout)
+    this._saveWorkout(workout)
 
     // add marker
     this._createMarker(workout)
@@ -220,6 +227,26 @@ class App {
 
   _getWorkoutById(id) {
     return this._workouts.find(i => i.id === id)
+  }
+
+  _saveWorkout(workout) {
+    this._workouts.push(workout)
+    localStorage.setItem('workouts', JSON.stringify(this._workouts))
+  }
+
+  _loadWorkouts() {
+    const workouts = localStorage.getItem('workouts')
+    if (!workouts) return
+    for (const data of JSON.parse(workouts)) {
+      let workout
+      if (data.type === 'running') {
+        workout = new Running(data.distance, data.duration, data.coords, data.cadence)
+      } else if (data.type === 'cycling') {
+        workout = new Cycling(data.distance, data.duration, data.coords, data.elevationGain)
+      }
+      this._workouts.push(workout)
+      this._renderWorkout(workout)
+    }
   }
 }
 
