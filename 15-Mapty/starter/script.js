@@ -48,7 +48,7 @@ class Cycling extends Workout {
 
   constructor(distance, duration, coords, elevationGain) {
     super(distance, duration, coords)
-    this.cadence = elevationGain
+    this.elevationGain = elevationGain
   }
 
   get speed() {
@@ -70,6 +70,7 @@ class App {
   constructor() {
     this._getPosition()
     form.addEventListener('submit', this._handleFormSubmit.bind(this))
+    inputType.addEventListener('change', this._toggleElevationField)
   }
 
   _getPosition() {
@@ -129,6 +130,9 @@ class App {
     // add marker
     this._createMarker(workout)
 
+    // display in list
+    this._renderWorkout(workout)
+
     // clear form
     form.style.display = 'none'
     form.classList.add('hidden')
@@ -148,6 +152,60 @@ class App {
         }
       )
       .openPopup();
+  }
+
+  _renderWorkout(workout) {
+    let html = `
+      <li class="workout workout--${workout.type}" data-id="${workout.id}">
+        <h2 class="workout__title">${workout.description}</h2>
+        <div class="workout__details">
+          <span class="workout__icon">${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'}</span>
+          <span class="workout__value">${workout.distance}</span>
+          <span class="workout__unit">km</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">⏱</span>
+          <span class="workout__value">${workout.duration}</span>
+          <span class="workout__unit">min</span>
+        </div>
+    `;
+
+    if (workout.type === 'running')
+      html += `
+        <div class="workout__details">
+          <span class="workout__icon">⚡️</span>
+          <span class="workout__value">${workout.pace}</span>
+          <span class="workout__unit">min/km</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">🦶🏼</span>
+          <span class="workout__value">${workout.cadence}</span>
+          <span class="workout__unit">spm</span>
+        </div>
+      </li>
+      `;
+
+    if (workout.type === 'cycling')
+      html += `
+        <div class="workout__details">
+          <span class="workout__icon">⚡️</span>
+          <span class="workout__value">${workout.speed}</span>
+          <span class="workout__unit">km/h</span>
+        </div>
+        <div class="workout__details">
+          <span class="workout__icon">⛰</span>
+          <span class="workout__value">${workout.elevationGain}</span>
+          <span class="workout__unit">m</span>
+        </div>
+      </li>
+      `;
+
+    form.insertAdjacentHTML('afterend', html);
+  }
+
+  _toggleElevationField() {
+    inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+    inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   }
 }
 
