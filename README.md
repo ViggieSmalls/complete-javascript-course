@@ -180,6 +180,30 @@ StudentPrototype.init = function (fullName, birthYear, course) {
 }
 ```
 
+## Asynchronous Javascript
+
+### The way it used to be
+
+```javascript
+const request = new XMLHttpRequest()
+request.open('GET', 'https://api.chess.com/pub/puzzle')
+request.send()
+request.addEventListener('load', function () {
+  console.log(this.responseText)
+})
+```
+
+### The modern way: fetch api
+
+A promise is a container for a value that will be populated in the future.
+
+```javascript
+const request = fetch('https://api.chess.com/pub/puzzle')
+        .then(response => response.json())
+        .catch(err => console.error(err.message))
+        .finally(() => console.log("done"))
+```
+
 [1]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
 [2]: https://en.wikipedia.org/wiki/Partial_application
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event
