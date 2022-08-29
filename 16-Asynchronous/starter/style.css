@@ -108,6 +108,10 @@ body {
   cursor: pointer;
 }
 
+.btn-country:disabled {
+  opacity: 0.5;
+}
+
 .images {
   display: flex;
 }
