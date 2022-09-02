@@ -204,6 +204,23 @@ const request = fetch('https://api.chess.com/pub/puzzle')
         .finally(() => console.log("done"))
 ```
 
+### The event loop
+
+* Functions inside the call stack are executed primarily
+* When the call stack is empty, then all tasks in the "microtasks queue", that come from promises, are executed
+* Only when the microtasks queue is empty, the callback queue is executed
+
+### Building a promise
+
+```javascript
+new Promise(function (resolve, reject) { 
+  if (Math.random() >= 0.5) resolve("success")
+  if (Math.random() < 0.5) reject("error")
+})
+```
+
+
+
 [1]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
 [2]: https://en.wikipedia.org/wiki/Partial_application
 [3]: https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event
