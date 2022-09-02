@@ -68,25 +68,31 @@ function wait(seconds) {
   })
 }
 
-let img;
-
 function createImage(imgPath) {
   return new Promise((resolve, reject) => {
-    img = document.createElement('img')
+    const img = document.createElement('img')
     img.src = imgPath
+
     img.addEventListener('load', function () {
       resolve(img)
+    })
+
+    img.addEventListener('error', function () {
+      reject(new Error('Image path not found'))
     })
   })
 }
 
+let currentImage
+
 createImage('img/img-1.jpg')
   .then(img => {
+    currentImage = img
     main.appendChild(img)
     return wait(2)
   })
   .then(() => {
-    img.style.display = 'none'
+    currentImage.style.display = 'none'
     return createImage('img/img-2.jpg')
   })
   .then(img => {
@@ -94,9 +100,10 @@ createImage('img/img-1.jpg')
     return wait(2)
   })
   .then(() => {
-    img.style.display = 'none'
+    currentImage.style.display = 'none'
     return createImage('img/img-3.jpg')
   })
   .then(img => {
     main.appendChild(img)
   })
+  .catch(err => console.error(err))
