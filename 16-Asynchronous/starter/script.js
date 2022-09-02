@@ -114,7 +114,7 @@ let currentImage
 const arrayOfImagePaths = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']
 
 async function loadAll(imgArr) {
-  const imgs = imgArr.map(async imgPath => createImage(imgPath))
+  const imgs = imgArr.map(imgPath => createImage(imgPath))
   const result = await Promise.all(imgs)
   console.log(result)
 }
