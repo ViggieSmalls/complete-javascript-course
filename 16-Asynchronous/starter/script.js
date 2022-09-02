@@ -4,16 +4,17 @@ const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
-class AuthenticationError extends Error {}
+class AuthenticationError extends Error {
+}
 
-function whereAmI(lat, lng, maxRetries=3) {
+function whereAmI(lat, lng, maxRetries = 3) {
   btn.disabled = 'true'
   const url = `https://geocode.xyz/${lat},${lng}?json=1`
   fetch(url)
     .then(response => {
       if (response.status === 403) {
         if (!maxRetries) throw Error("Could not retrieve data")
-        setTimeout(whereAmI.bind(null, lat, lng, maxRetries-1), 1000)
+        setTimeout(whereAmI.bind(null, lat, lng, maxRetries - 1), 1000)
         throw new AuthenticationError("Retry in 1 sec")
       }
       return response.json()
@@ -41,8 +42,8 @@ const renderCountry = function (data, className = '') {
       <h3 class="country__name">${data.name}</h3>
       <h4 class="country__region">${data.region}</h4>
       <p class="country__row"><span>👫</span>${(
-        +data.population / 1000000
-      ).toFixed(1)} people</p>
+    +data.population / 1000000
+  ).toFixed(1)} people</p>
       <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
       <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
     </div>
@@ -57,3 +58,45 @@ btn.addEventListener('click', function () {
   const lng = document.getElementById('lng').value
   whereAmI(lat, lng)
 })
+
+
+const main = document.querySelector('main')
+
+function wait(seconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, seconds * 1000)
+  })
+}
+
+let img;
+
+function createImage(imgPath) {
+  return new Promise((resolve, reject) => {
+    img = document.createElement('img')
+    img.src = imgPath
+    img.addEventListener('load', function () {
+      resolve(img)
+    })
+  })
+}
+
+createImage('img/img-1.jpg')
+  .then(img => {
+    main.appendChild(img)
+    return wait(2)
+  })
+  .then(() => {
+    img.style.display = 'none'
+    return createImage('img/img-2.jpg')
+  })
+  .then(img => {
+    main.appendChild(img)
+    return wait(2)
+  })
+  .then(() => {
+    img.style.display = 'none'
+    return createImage('img/img-3.jpg')
+  })
+  .then(img => {
+    main.appendChild(img)
+  })
