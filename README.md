@@ -219,6 +219,20 @@ new Promise(function (resolve, reject) {
 })
 ```
 
+### async/await
+
+* Instead of using `.then()` to process the value returned by a Promise, we can use `await`.
+* basically only syntactic sugar
+* `await` can only be used inside functions defined with `async`.
+  To still execute them, one can use an IIFE.
+  ```javascript
+  (async function() {
+    const response = await fetch("...")
+    const data = await response.json()
+    console.log(data)
+  })()
+  ```
+* asynchronous functions can be run in parallel with the methods `Promise.all()`, `Promise.allSettled()`, `Promise.race()` or `Promise.any()`
 
 
 [1]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
