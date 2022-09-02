@@ -60,7 +60,7 @@ btn.addEventListener('click', function () {
 })
 
 
-const main = document.querySelector('main')
+const imagesContainer = document.querySelector('.images')
 
 function wait(seconds) {
   return new Promise((resolve) => {
@@ -71,9 +71,11 @@ function wait(seconds) {
 function createImage(imgPath) {
   return new Promise((resolve, reject) => {
     const img = document.createElement('img')
+    img.classList.add('parallel')
     img.src = imgPath
 
     img.addEventListener('load', function () {
+      imagesContainer.appendChild(img)
       resolve(img)
     })
 
@@ -85,25 +87,36 @@ function createImage(imgPath) {
 
 let currentImage
 
-createImage('img/img-1.jpg')
-  .then(img => {
-    currentImage = img
-    main.appendChild(img)
-    return wait(2)
-  })
-  .then(() => {
-    currentImage.style.display = 'none'
-    return createImage('img/img-2.jpg')
-  })
-  .then(img => {
-    main.appendChild(img)
-    return wait(2)
-  })
-  .then(() => {
-    currentImage.style.display = 'none'
-    return createImage('img/img-3.jpg')
-  })
-  .then(img => {
-    main.appendChild(img)
-  })
-  .catch(err => console.error(err))
+// createImage('img/img-1.jpg')
+//   .then(img => {
+//     currentImage = img
+//     main.appendChild(img)
+//     return wait(2)
+//   })
+//   .then(() => {
+//     currentImage.style.display = 'none'
+//     return createImage('img/img-2.jpg')
+//   })
+//   .then(img => {
+//     main.appendChild(img)
+//     return wait(2)
+//   })
+//   .then(() => {
+//     currentImage.style.display = 'none'
+//     return createImage('img/img-3.jpg')
+//   })
+//   .then(img => {
+//     main.appendChild(img)
+//   })
+//   .catch(err => console.error(err))
+
+
+const arrayOfImagePaths = ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']
+
+async function loadAll(imgArr) {
+  const imgs = imgArr.map(async imgPath => createImage(imgPath))
+  const result = await Promise.all(imgs)
+  console.log(result)
+}
+
+loadAll(arrayOfImagePaths)
