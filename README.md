@@ -234,6 +234,17 @@ new Promise(function (resolve, reject) {
   ```
 * asynchronous functions can be run in parallel with the methods `Promise.all()`, `Promise.allSettled()`, `Promise.race()` or `Promise.any()`
 
+## Modern JS Development
+
+### Modules
+* imports are hoisted
+* bundlers recognize export/import statements and remove dead code
+* modules are specified with `<script type="module">`
+* modules are downloaded asynchronously
+* modules are always executed in strict mode
+* top level await is blocking
+
+
 
 [1]: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction
 [2]: https://en.wikipedia.org/wiki/Partial_application
