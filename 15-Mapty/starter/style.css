@@ -1,3 +1,6 @@
+@import 'node_modules/leaflet/dist/leaflet.css';
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap");
+
 :root {
   --color-brand--1: #ffb545;
   --color-brand--2: #00c46a;
