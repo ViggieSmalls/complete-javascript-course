@@ -1,5 +1,63 @@
 # Course notes
 
+## Wow!
+
+* set `debugger;` in your code to set a breakpoint in the debugger console
+* numeric separator: `diameter = 287_460_000_000`
+* `Array.from({length: 7}, (cur, i) => i + 1)`
+* `Array.from(document.querySelectorAll('a'), () => {})`
+
+## Numbers
+
+* `Number.isNaN`
+* `Number.isFinite`
+* `Number.parseFloat`
+* `Number.parseInteger`
+* every number is represented as 64 bits.
+  ony 53 are used to store digits, the rest is for the position of the decimal point and sign.
+  Therefore the highest number that can be represented correctly is `2**53-1`
+* for numbers bigger than that, use `BigInt` or `122324151n`
+
+## Syntax
+
+* destructure arrays
+  ```javascript
+  [a, b] = [1, 2]
+  ```
+* destructure objects
+  ```javascript
+  {name, age} = {name: "Victor", age: 15, color: "#fff"}
+  ```
+* Rest pattern: `[...arr]`
+* Nullish coalescing operator `??`: If the left side is `null` or `undefined` the variable takes the right value
+* OR assignment operator `||=`: The logical OR assignment (x ||= y) operator only assigns if x is falsy.
+* Nullish coalescing assignment `??=`: only assigns if x is nullish (null or undefined).
+* optional chaining:
+  ```javascript
+  A?.b?.c
+  A[i]?.b
+  A.method?.(b, c)
+  ```
+* object literals:
+  ```javascript
+  {
+  calcAge(year) {year - this.birthYear},
+  [weekday[i]]: {a: 1, b: 2}
+  }
+  ```
+
+## Arrays
+
+* `arr.includes(x)`
+* `arr.some(callback)`: is there one item that evaluates the callback to true?
+* `arr.every(callback)`
+* `arr.findIndex(callback)`
+* `arr.find(callback)`
+* `arr.flat(n)`: flattens an array. n is the number of levels (default=1)
+* `arr.flatMap(callback)`: identical to map() followed by flat() but slightly more efficient
+* `arr.sort((a, b) => {...})`: return < 0: keep order, return > 0: switch a & b
+
+
 ## A Closer Look at Functions
 
 * First-class functions: functions in javascript can do what everybody else can do, e.g. assigned to a value, passed as an argument, returned from a function
@@ -10,6 +68,7 @@
   In an event handler, the `this` keyword points to the element it is attached to
 * The `bind()` method attaches another object to the `this` keyword of a function.
   It can also pass default arguments for a function, which is called [partial application][2].
+* Use `el.addEventListener('click', obj.method.bind(obj))` to call an object's method, otherwise the `this` keyword of `obj.method` will be `el.addEventListener`
 
 ### IIFE
 
